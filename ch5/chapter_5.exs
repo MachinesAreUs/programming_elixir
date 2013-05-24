@@ -35,7 +35,7 @@ IO.puts fizz_buzz_disc.(1, 0, 1) == "Buzz"
 IO.puts fizz_buzz_disc.(1, 1, 1) == 1
 
 fizz_buzz = function do
-	n -> fizz_buzz_disc.(rem(n,3), rem(n, 5), n)
+  n -> fizz_buzz_disc.(rem(n,3), rem(n, 5), n)
 end
 
 IO.puts (Enum.map 10..16, fizz_buzz.(&1)) == ["Buzz", 11, "Fizz", 13, 14, "FizzBuzz", 16]
