@@ -16,8 +16,8 @@ IO.puts SumUp.to(3) == 6
 IO.puts SumUp.to(4) == 10
 
 # Write a function gcd(x,y)that finds the greatest common divisor between
-# two nonnegative integers. Algebraically, gcd(x,y)is x if y is zero,
-# gcd(y,rem(x,y))otherwise
+# two nonnegative integers. 
+# Algebraically, gcd(x,y)is x if y is zero, gcd(y,rem(x,y)) otherwise
 
 defmodule GDC do
   def for(x, 0), do: x
