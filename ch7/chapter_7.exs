@@ -110,3 +110,48 @@ end
 IO.puts MyList.caesar('abc', 1) == 'bcd'
 IO.puts MyList.caesar('xyz', 3) == 'abc'
 IO.puts MyList.caesar('azb', 5) == 'feg'
+
+# 7.7 List Comprehensions
+
+# Samples
+
+IO.puts (lc x inlist :lists.seq(1,5), do: x * x) == [1, 4, 9, 16, 25]
+# Damdn elixir: (lc x inlist 1..5, do: x * x) == [1, 4, 9, 16, 25]
+IO.puts (lc x inlist :lists.seq(1,100), Math. do: x * x) == []
+IO.puts (lc x inlist [1, 2], y inlist ['x', 'y'], do: {x, y}) == [{1,'x'},{1,'y'},{2,'x'},{2,'y'}]
+
+# Chapter Excercises (after 7.8)
+
+# Implement the following Enum functions using no library functions or
+# list comprehensions: all?, each, filter, split, and take
+
+
+# Write a function MyList.span(from, to) that returns a list of the numbers
+# from fromup to to.
+
+
+# Use your span function and list comprehensions to return a list of the
+# prime numbers from 2 to n.
+
+
+# Pragmatic Bookshelf has offices in Texas (TX) and North Carolina (NC),
+# so we have to charge sales tax on orders shipped to these states. The
+# rates can be expressed as a keyword list
+#
+# tax_rates = [ NC: 0.075, TX: 0.08 ]
+# 
+# Here’s a list of orders:
+# 
+# orders = [
+#   [ id: 123, ship_to: :NC, net_amount: 100.00 ],
+#   [ id: 124, ship_to: :OK, net_amount:  35.50 ],
+#   [ id: 125, ship_to: :TX, net_amount:  24.00 ],
+#   [ id: 126, ship_to: :TX, net_amount:  44.80 ],
+#   [ id: 127, ship_to: :NC, net_amount:  25.00 ],
+#   [ id: 128, ship_to: :MA, net_amount:  10.00 ],
+#   [ id: 129, ship_to: :CA, net_amount: 102.00 ],
+#   [ id: 120, ship_to: :NC, net_amount:  50.00 ] ]
+#   
+# Write a function that takes both lists and returns a copy of the orders,
+# but with an extra field,  total_amountwhich is the net plus sales tax. If a
+# shipment is not to NC or TX, there’s no tax applied
