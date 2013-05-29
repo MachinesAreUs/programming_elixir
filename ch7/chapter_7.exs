@@ -117,8 +117,15 @@ IO.puts MyList.caesar('azb', 5) == 'feg'
 
 IO.puts (lc x inlist :lists.seq(1,5), do: x * x) == [1, 4, 9, 16, 25]
 # Damdn elixir: (lc x inlist 1..5, do: x * x) == [1, 4, 9, 16, 25]
-IO.puts length(lc x inlist :lists.seq(1,100), y inlist :lists.seq(1,100), x >= y, x+y == 100, do: {x, y}) == 50
-IO.puts (lc x inlist [1, 2], y inlist ['x', 'y'], do: {x, y}) == [{1,'x'},{1,'y'},{2,'x'},{2,'y'}]
+IO.puts length(lc x inlist :lists.seq(1,100), 
+                  y inlist :lists.seq(1,100), 
+                  x >= y, 
+                  x + y == 100, 
+                  do: {x, y}) == 50
+IO.puts (lc x inlist [1, 2], 
+            y inlist ['x', 'y'], 
+            do: {x, y}
+        ) == [{1,'x'},{1,'y'},{2,'x'},{2,'y'}]
 
 # Chapter Excercises (after 7.8)
 
@@ -126,8 +133,13 @@ IO.puts (lc x inlist [1, 2], y inlist ['x', 'y'], do: {x, y}) == [{1,'x'},{1,'y'
 # list comprehensions: all?, each, filter, split, and take
 
 defmodule Enum2 do
+
   def all?([], _fun), do: true
   def all?([h|t], fun), do: fun.(h) and all?(t, fun)
+
+  # def filter([], _fun), do: []
+  # def filter([h|t], fun) when fun.(h), do: [h | filter(t, fun)]
+  # def filter([h|t], fun), do: filter(t, fun)
 end
 
 IO.puts Enum2.all? :lists.seq(1, 100), &1 > 0
@@ -138,6 +150,7 @@ IO.puts Enum2.all? :lists.seq(3, 333, 3), fn x -> rem(x,3) == 0 end
 # from from "up" to "to".
 
 defmodule Enum3 do
+  def span(from, to) when to <= from, do: [from]
   def span(from, to) when from + 1 == to, do: [from | [to]]
   def span(from, to), do: [ from | span(from+1, to)]
 end
@@ -148,15 +161,18 @@ IO.puts Enum3.span(11, 20) == [11,12,13,14,15,16,17,18,19,20]
 # Use your span function and list comprehensions to return a list of the
 # prime numbers from 2 to n.
 
-defmodule Enum4 do
+defmodule Primes do
   def primes_up_to(n) do
     lc x inlist Enum3.span(2, n), 
-       y inlist Enum3.span(2, n-1), 
-       y < x,
-       rem(x, y) != 0, 
-       do: {x, y}
+      # x == 2 is stupid! :(
+      x == 2 or (Enum.all? (lc y inlist Enum3.span(2, div(x, 2)), do: rem(x, y) != 0) ), 
+      do: x
   end
 end
+
+IO.puts Primes.primes_up_to(10) == [2, 3, 5, 7]
+IO.puts Primes.primes_up_to(40) == [2, 3, 5, 7, 11, 13, 23, 29, 37]
+
 
 # Pragmatic Bookshelf has offices in Texas (TX) and North Carolina (NC),
 # so we have to charge sales tax on orders shipped to these states. The
@@ -168,7 +184,7 @@ end
 # 
 # orders = [
 #   [ id: 123, ship_to: :NC, net_amount: 100.00 ],
-#   [ id: 124, ship_to: :OK, net_amount:  35.50 ],
+#   [ id: 124, ship_to: :OK, net_amount:  35.50 ], 
 #   [ id: 125, ship_to: :TX, net_amount:  24.00 ],
 #   [ id: 126, ship_to: :TX, net_amount:  44.80 ],
 #   [ id: 127, ship_to: :NC, net_amount:  25.00 ],
