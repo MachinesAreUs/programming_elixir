@@ -117,7 +117,7 @@ IO.puts MyList.caesar('azb', 5) == 'feg'
 
 IO.puts (lc x inlist :lists.seq(1,5), do: x * x) == [1, 4, 9, 16, 25]
 # Damdn elixir: (lc x inlist 1..5, do: x * x) == [1, 4, 9, 16, 25]
-IO.puts (lc x inlist :lists.seq(1,100), Math. do: x * x) == []
+IO.puts length(lc x inlist :lists.seq(1,100), y inlist :lists.seq(1,100), x >= y, x+y == 100, do: {x, y}) == 50
 IO.puts (lc x inlist [1, 2], y inlist ['x', 'y'], do: {x, y}) == [{1,'x'},{1,'y'},{2,'x'},{2,'y'}]
 
 # Chapter Excercises (after 7.8)
@@ -125,14 +125,38 @@ IO.puts (lc x inlist [1, 2], y inlist ['x', 'y'], do: {x, y}) == [{1,'x'},{1,'y'
 # Implement the following Enum functions using no library functions or
 # list comprehensions: all?, each, filter, split, and take
 
+defmodule Enum2 do
+  def all?([], _fun), do: true
+  def all?([h|t], fun), do: fun.(h) and all?(t, fun)
+end
+
+IO.puts Enum2.all? :lists.seq(1, 100), &1 > 0
+IO.puts Enum2.all? :lists.seq(0, 100, 2), fn x -> rem(x,2) == 0 end
+IO.puts Enum2.all? :lists.seq(3, 333, 3), fn x -> rem(x,3) == 0 end 
 
 # Write a function MyList.span(from, to) that returns a list of the numbers
-# from fromup to to.
+# from from "up" to "to".
 
+defmodule Enum3 do
+  def span(from, to) when from + 1 == to, do: [from | [to]]
+  def span(from, to), do: [ from | span(from+1, to)]
+end
+
+IO.puts Enum3.span(5, 6) == [5, 6]
+IO.puts Enum3.span(11, 20) == [11,12,13,14,15,16,17,18,19,20]
 
 # Use your span function and list comprehensions to return a list of the
 # prime numbers from 2 to n.
 
+defmodule Enum4 do
+  def primes_up_to(n) do
+    lc x inlist Enum3.span(2, n), 
+       y inlist Enum3.span(2, n-1), 
+       y < x,
+       rem(x, y) != 0, 
+       do: {x, y}
+  end
+end
 
 # Pragmatic Bookshelf has offices in Texas (TX) and North Carolina (NC),
 # so we have to charge sales tax on orders shipped to these states. The
@@ -155,3 +179,6 @@ IO.puts (lc x inlist [1, 2], y inlist ['x', 'y'], do: {x, y}) == [{1,'x'},{1,'y'
 # Write a function that takes both lists and returns a copy of the orders,
 # but with an extra field,  total_amountwhich is the net plus sales tax. If a
 # shipment is not to NC or TX, there’s no tax applied
+
+
+
