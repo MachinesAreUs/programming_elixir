@@ -116,7 +116,7 @@ IO.puts MyList.caesar('azb', 5) == 'feg'
 # Samples
 
 IO.puts (lc x inlist :lists.seq(1,5), do: x * x) == [1, 4, 9, 16, 25]
-# Damdn elixir: (lc x inlist 1..5, do: x * x) == [1, 4, 9, 16, 25]
+# Damn elixir: (lc x inlist 1..5, do: x * x) == [1, 4, 9, 16, 25]
 IO.puts length(lc x inlist :lists.seq(1,100), 
                   y inlist :lists.seq(1,100), 
                   x >= y, 
@@ -199,7 +199,7 @@ IO.puts Primes.primes_up_to(40) == [2, 3, 5, 7, 11, 13, 23, 29, 37]
 import Enum
 
 defmodule PragBookshelf do
-  def calcTax(tax_rates, orders) do
+  def calc_tax(tax_rates, orders) do
     map orders, apply_tax_from(tax_rates)
   end
   defp apply_tax_from(tax_rates) do
@@ -233,6 +233,6 @@ taxed_orders = [
   [ id: 129, ship_to: :CA, net_amount: 102.00, total_amount: 102.0               ],
   [ id: 120, ship_to: :NC, net_amount:  50.00, total_amount:  53.75              ] ]
 
-IO.puts PragBookshelf.calcTax(tax_rates, orders) == taxed_orders
+IO.puts PragBookshelf.calc_tax(tax_rates, orders) == taxed_orders
 
 
