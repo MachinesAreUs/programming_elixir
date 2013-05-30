@@ -196,15 +196,17 @@ IO.puts Primes.primes_up_to(40) == [2, 3, 5, 7, 11, 13, 23, 29, 37]
 # but with an extra field,  total_amount which is the net plus sales tax. If a
 # shipment is not to NC or TX, there’s no tax applied
 
+import Enum
+
 defmodule PragBookshelf do
   def calcTax(tax_rates, orders) do
-    Enum.map orders, apply_tax_from(tax_rates)
+    map orders, apply_tax_from(tax_rates)
   end
-  def apply_tax_from(tax_rates) do
+  defp apply_tax_from(tax_rates) do
     fn order -> 
       [_, {:ship_to, state}, {:net_amount, net_amount} ] = order
-      {_, tax_rate} = Enum.find( tax_rates, elem(&1, 0) == state)
-      [ tax_rate | order ]
+      {_, tax_rate} = find tax_rates, {:default, 0}, fn r -> elem(r, 0) == state end
+      order ++ [total_amount: net_amount * (1 + tax_rate)]
     end
   end
 end
@@ -221,5 +223,16 @@ orders = [
   [ id: 129, ship_to: :CA, net_amount: 102.00 ],
   [ id: 120, ship_to: :NC, net_amount:  50.00 ] ]
 
+taxed_orders = [
+  [ id: 123, ship_to: :NC, net_amount: 100.00, total_amount: 107.5               ],
+  [ id: 124, ship_to: :OK, net_amount:  35.50, total_amount:  35.5               ], 
+  [ id: 125, ship_to: :TX, net_amount:  24.00, total_amount:  25.920000000000002 ],
+  [ id: 126, ship_to: :TX, net_amount:  44.80, total_amount:  48.384             ],
+  [ id: 127, ship_to: :NC, net_amount:  25.00, total_amount:  26.875             ],
+  [ id: 128, ship_to: :MA, net_amount:  10.00, total_amount:  10.0               ],
+  [ id: 129, ship_to: :CA, net_amount: 102.00, total_amount: 102.0               ],
+  [ id: 120, ship_to: :NC, net_amount:  50.00, total_amount:  53.75              ] ]
+
+IO.puts PragBookshelf.calcTax(tax_rates, orders) == taxed_orders
 
 
